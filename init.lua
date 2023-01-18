@@ -32,13 +32,44 @@ require('telescope').load_extension('fzf')
 require'nvim-treesitter'.setup()
 require("mason").setup()
 require("mason-lspconfig").setup {
-    ensure_installed = { "sumneko_lua", "tsserver", "jedi_language_server", "quick_lint_js" },
+    ensure_installed = { "sumneko_lua", "tsserver", "pylsp", "quick_lint_js" },
 }
 
--- Completions
 
+-- Completions
+local cmp = require'cmp'
+  cmp.setup({
+    snippet = {
+      -- Specifying he required snippet engine
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-a>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' }
+    },
+    {
+      { name = 'buffer' },
+    })
+  })
+
+require("luasnip.loaders.from_vscode").lazy_load()
 
 -- LSP stuff
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+  require('lspconfig')['sumneko_lua'].setup {
+  }
+
 local on_attach = function(_, _)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, {})
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
@@ -49,21 +80,29 @@ local on_attach = function(_, _)
 end
 
 require'lspconfig'.sumneko_lua.setup{
-  on_attach = on_attach
+  on_attach = on_attach,
+  capabilities = capabilities,
+  -- get the lsp to recognize the vim global variable
+  settings = {
+        Lua = {
+            diagnostics = {
+                globals = { 'vim' },
+            },
+        },
+    },
 }
 require'lspconfig'.tsserver.setup{
-  on_attach = on_attach;
+  on_attach = on_attach,
+  capabilities = capabilities
 }
--- require'lspconfig'.jedi_language_server.setup{
--- on_attach = on_attach;
--- }
 require'lspconfig'.quick_lint_js.setup{
-  on_attach = on_attach;
+  on_attach = on_attach,
+  capabilities = capabilities
 }
-require'lspconfig'.pyright.setup{
-  on_attach = on_attach;
+require'lspconfig'.pylsp.setup{
+  on_attach = on_attach,
+  capabilities = capabilities
 }
-
 
 -- make packer do a update and compile whenever plugins.lua is changed to update the plugins
 vim.cmd([[
