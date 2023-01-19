@@ -35,11 +35,14 @@ return require('packer').startup(function(use)
   use 'rafamadriz/friendly-snippets'
 
   -- THEME
-  -- use {
-  -- 'nvim-lualine/lualine.nvim',
-  -- requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-  -- }
-  use 'bluz71/vim-nightfly-colors'
+  use {
+  'nvim-lualine/lualine.nvim',
+  requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  }
+  -- use 'bluz71/vim-nightfly-colors'
+
+  -- use "EdenEast/nightfox.nvim"
+  use 'folke/tokyonight.nvim'
 
 end)
 
