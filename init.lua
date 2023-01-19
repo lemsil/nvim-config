@@ -14,9 +14,9 @@ vim.opt.ignorecase = true
 vim.opt.termguicolors = true
 vim.opt.guicursor = 'n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175'
 
--- keymaps
 vim.g.mapleader = ' '
 
+-- keymaps
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
@@ -29,7 +29,7 @@ vim.keymap.set('n', '<leader>E', ':tabnew<CR>:Ex<CR>', {})
 vim.keymap.set('n', '<C-w>', ':tabclose<CR>', {})
 vim.keymap.set('n', '{', ':-tabnext<CR>', {})
 vim.keymap.set('n', '}', ':tabnext<CR>', {})
-vim.keymap.set('n', '<leader>t', ':tabnew<CR>', {})
+vim.keymap.set('n', '<leader>t', ':tabnew<CR>:Ex<CR>', {})
 vim.keymap.set('n', '<leader>w', ':tabclose<CR>', {})
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", {})
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", {})
@@ -205,8 +205,8 @@ ins_left {
 ins_left {
   -- mode component
   function()
-    --       ⏾    
-    return ''
+    --       ⏾    ██ ☺@
+    return ' '
   end,
   color = function()
     -- auto change color according to neovims mode
