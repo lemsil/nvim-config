@@ -34,6 +34,14 @@ return require('packer').startup(function(use)
   use 'saadparwaiz1/cmp_luasnip'
   use 'rafamadriz/friendly-snippets'
 
+  -- Commenting
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
+
   -- THEME
   use {
   'nvim-lualine/lualine.nvim',
