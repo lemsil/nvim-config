@@ -11,16 +11,17 @@ return require('packer').startup(function(use)
     requires = { {'nvim-lua/plenary.nvim'} }
   }
 
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = function()
-      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-      ts_update()
-    end,
-  }
+  -- use {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   run = function()
+  --     local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+  --     ts_update()
+  --   end,
+  -- }
 
   -- Commenting
   use "terrortylor/nvim-comment"
+  require('nvim_comment').setup()
 
   -- THEME
   use {
