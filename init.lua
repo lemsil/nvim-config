@@ -17,13 +17,37 @@ vim.g.mapleader = ' '
 -- make tree style the default netrw style
 vim.g.netrw_liststyle = 3
 
+-- lua functions
+function OpenTerminalSplitView()
+  vim.cmd('split')
+  vim.cmd('term')
+end
+
+function AutoSwitchDirectory()
+  vim.cmd('autocmd BufEnter * silent! lcd %:p:h')
+end
+AutoSwitchDirectory()
+
 -- custom commands
-vim.api.nvim_create_user_command('Reso', 'source "$MYVIMRC"', {})
+vim.api.nvim_create_user_command('Reso', 'source $MYVIMRC', {})
+
+vim.api.nvim_create_user_command('ST', 'lua OpenTerminalSplitView()', {})
+vim.api.nvim_create_user_command('BP', "lua require'dap'.toggle_breakpoint()", {})
+vim.api.nvim_create_user_command('DB', "lua require'dap'.continue()", {})
+vim.api.nvim_create_user_command('DBO', "lua require'dap'.repl.open()", {})
+
+vim.api.nvim_create_user_command('M', "make", {})
+vim.api.nvim_create_user_command('MR', "make run", {})
+vim.api.nvim_create_user_command('MRR', "make rrun", {})
+
+vim.api.nvim_create_user_command('HEX', "%!xxd", {})
+
 
 -- keymaps
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+-- vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 vim.keymap.set('n', '<C-y>', '<C-y>k', {})
@@ -44,12 +68,43 @@ vim.keymap.set('n', '<leader>j', '<C-w>j', {})
 vim.keymap.set('n', '<leader>k', '<C-w>k', {})
 vim.keymap.set('n', '<leader>h', '<C-w>h', {})
 vim.keymap.set('n', '<leader>l', '<C-w>l', {})
+vim.keymap.set('n', '<C-=>', '<C-w>+', {})
+vim.keymap.set('n', '<C-->', '<C-w>-', {})
+
+vim.keymap.set('n', '<leader>i', "lua require'dap'.step_over()<CR>", {})
+vim.keymap.set('n', '<leader>o', "lua require'dap'.step_into()<CR>", {})
 
 -- plugins
 require('plugins')
-require('lualine').setup()
+-- require('lualine').setup()
+
+-- telescope
 require('telescope').load_extension('fzf')
--- require'nvim-treesitter'.setup()
+
+require("telescope").setup({
+  extensions = {
+    live_grep_args = {
+      auto_quoting = true
+    },
+  },
+  defaults = {
+    mappings = {
+      i = {
+        ['<C-p>'] = require('telescope.actions.layout').toggle_preview
+      },
+      n = {
+        ['<C-p>'] = require('telescope.actions.layout').toggle_preview
+      },
+    },
+    layout_config = {
+      horizontal = {
+        preview_cutoff = 0,
+      },
+    },
+  },
+})
+
+require'nvim-treesitter'.setup()
 
 -- comments
 require('nvim_comment').setup()
@@ -63,4 +118,5 @@ vim.cmd([[
 ]])
 
 -- colorscheme
-vim.cmd("colorscheme tokyonight-night")
+-- vim.cmd("colorscheme tokyonight-night")
+vim.cmd("colorscheme torte")
