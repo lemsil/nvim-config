@@ -41,7 +41,18 @@ vim.api.nvim_create_user_command('MR', "make run", {})
 vim.api.nvim_create_user_command('MRR', "make rrun", {})
 
 vim.api.nvim_create_user_command('HEX', "%!xxd", {})
+vim.api.nvim_create_user_command('CCA', "lua vim.opt.colorcolumn = '80'", {})
+vim.api.nvim_create_user_command('CCO', "lua vim.opt.colorcolumn = '0'", {})
 
+
+vim.opt.colorcolumn = "0"
+
+vim.cmd([[
+autocmd!
+autocmd BufEnter *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+autocmd BufFilePost *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+augroup END
+]])
 
 -- keymaps
 local builtin = require('telescope.builtin')
