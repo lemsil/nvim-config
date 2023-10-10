@@ -44,7 +44,6 @@ vim.api.nvim_create_user_command('HEX', "%!xxd", {})
 vim.api.nvim_create_user_command('CCA', "lua vim.opt.colorcolumn = '80'", {})
 vim.api.nvim_create_user_command('CCO', "lua vim.opt.colorcolumn = '0'", {})
 
-
 vim.opt.colorcolumn = "0"
 
 vim.cmd([[
@@ -81,6 +80,14 @@ vim.keymap.set('n', '<leader>h', '<C-w>h', {})
 vim.keymap.set('n', '<leader>l', '<C-w>l', {})
 vim.keymap.set('n', '<C-=>', '<C-w>+', {})
 vim.keymap.set('n', '<C-->', '<C-w>-', {})
+-- vim.keymap.set('n', '<leader>/', ':CommentToggle<CR>', {})
+-- vim.keymap.set('v', '<leader>/', ':CommentToggle<CR>', {})
+vim.keymap.set('n', '<leader>n', ':CommentToggle<CR>', {})
+vim.keymap.set('v', '<leader>n', ':CommentToggle<CR>', {})
+vim.keymap.set('n', 'U', '<C-r>', {})
+vim.keymap.set('v', 'U', '<C-r>', {})
+vim.keymap.set('n', '<leader>p', '80|bi<CR><Esc>', {})
+
 
 vim.keymap.set('n', '<leader>i', "lua require'dap'.step_over()<CR>", {})
 vim.keymap.set('n', '<leader>o', "lua require'dap'.step_into()<CR>", {})
