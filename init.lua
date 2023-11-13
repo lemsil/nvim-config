@@ -1,3 +1,54 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+
+  "nvim-lua/plenary.nvim",
+
+  {'nvim-telescope/telescope-live-grep-args.nvim'},
+
+  {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
+
+
+  {
+   'nvim-telescope/telescope.nvim', tag = '0.1.4',
+   dependencies = { 
+     {'nvim-lua/plenary.nvim'},
+     { 'nvim-telescope/telescope-live-grep-args.nvim' },
+
+   },
+   config = function()
+     require("telescope").load_extension("live_grep_args")
+   end
+ },
+
+ {
+   'nvim-treesitter/nvim-treesitter',
+   run = function()
+     local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+     ts_update()
+   end,
+ },
+
+  "terrortylor/nvim-comment"
+}, opts)
+
+ 
+require('nvim_comment').setup()
+require('telescope').setup()
+require('nvim-treesitter').setup()
+
+
 -- options
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -46,20 +97,22 @@ vim.api.nvim_create_user_command('CCO', "lua vim.opt.colorcolumn = '0'", {})
 
 vim.opt.colorcolumn = "0"
 
-vim.cmd([[
-autocmd!
-autocmd BufEnter *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
-autocmd BufFilePost *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
-augroup END
-]])
+-- vim.cmd([[
+-- autocmd!
+-- autocmd BufEnter *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+-- autocmd BufFilePost *.m :lua vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+-- augroup END
+-- ]])
 
--- keymaps
+
+-- -- keymaps
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
 -- vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set("n", "<leader>fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+
 vim.keymap.set('n', '<C-y>', '<C-y>k', {})
 vim.keymap.set('n', '<C-e>', '<C-e>j', {})
 vim.keymap.set('n', '<leader>e', ':Ex<CR>', {})
@@ -80,8 +133,6 @@ vim.keymap.set('n', '<leader>h', '<C-w>h', {})
 vim.keymap.set('n', '<leader>l', '<C-w>l', {})
 vim.keymap.set('n', '<C-=>', '<C-w>+', {})
 vim.keymap.set('n', '<C-->', '<C-w>-', {})
--- vim.keymap.set('n', '<leader>/', ':CommentToggle<CR>', {})
--- vim.keymap.set('v', '<leader>/', ':CommentToggle<CR>', {})
 vim.keymap.set('n', '<leader>n', ':CommentToggle<CR>', {})
 vim.keymap.set('v', '<leader>n', ':CommentToggle<CR>', {})
 vim.keymap.set('n', 'U', '<C-r>', {})
@@ -92,49 +143,5 @@ vim.keymap.set('n', '<leader>p', '80|bi<CR><Esc>', {})
 vim.keymap.set('n', '<leader>i', "lua require'dap'.step_over()<CR>", {})
 vim.keymap.set('n', '<leader>o', "lua require'dap'.step_into()<CR>", {})
 
--- plugins
-require('plugins')
--- require('lualine').setup()
-
--- telescope
-require('telescope').load_extension('fzf')
-
-require("telescope").setup({
-  extensions = {
-    live_grep_args = {
-      auto_quoting = true
-    },
-  },
-  defaults = {
-    mappings = {
-      i = {
-        ['<C-p>'] = require('telescope.actions.layout').toggle_preview
-      },
-      n = {
-        ['<C-p>'] = require('telescope.actions.layout').toggle_preview
-      },
-    },
-    layout_config = {
-      horizontal = {
-        preview_cutoff = 0,
-      },
-    },
-  },
-})
-
-require'nvim-treesitter'.setup()
-
--- comments
-require('nvim_comment').setup()
-
--- make packer do a update and compile whenever plugins.lua is changed to update the plugins
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
-
--- colorscheme
--- vim.cmd("colorscheme tokyonight-night")
 vim.cmd("colorscheme torte")
+-- vim.g.colors_name = "torte"
